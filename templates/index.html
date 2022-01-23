@@ -18,7 +18,7 @@
     <style>
          
             .top{
-                background-color: #006dd0;
+                background-color: #28a745;
                 color: #f5faff;
                 font-weight: 600;
                 line-height: 1.80;
@@ -59,7 +59,7 @@
             }
 
             input[type=submit] {
-                background-color: #0070ba;
+                background-color: #28a745;
                 color: #fff;
                 padding: 7px 20px;
                 border: none;
@@ -91,7 +91,7 @@
             .grid_tittle{
                 margin-left: 60px;
                 font-size: 18px;
-                color: brown;
+                color: #17a2b8;
             }
 
             .table_layout{
@@ -109,7 +109,7 @@
         
         <div class="container-fluid container_padding">
             <form action="/Submit" method="post">
-                <div class="row form_basic">
+                <div class="row form-row">
                     <div>
                         <label for="uname">User Name : </label>
                     </div>
@@ -118,7 +118,7 @@
                         request.form.username }}">
                     </div>
 
-                    <div style= "margin-left: 100px;">
+                    <div style= "margin-left: 50px;">
                         <input type="submit" name='Submit' value="Submit">
                     </div>
                 </div>
@@ -140,7 +140,7 @@
         <div class="table_layout">
             <table>
                 <tr>
-                   <th style="background: #1e6091; color: white;">Product Name</th>
+                   <th style="background: #28a745; color: white;">Product Name</th>
                 </tr>
                 {% for row in row_data %}
                 <tr>

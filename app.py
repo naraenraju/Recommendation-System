@@ -3,8 +3,8 @@ from flask import request
 import pickle
 import pandas as pd
 import numpy as np
-from sklearn.feature_extraction.text import CountVectorizer
-from xgboost import XGBClassifier
+from sklearn.feature_extraction.text import CountVectorizer,TfidfVectorizer
+
 
 
 app = Flask(__name__)
@@ -30,23 +30,26 @@ def Submit():
 
             # Loadrecommendation file
             recommendation_df = pd.read_pickle("./models/itembased-df.pickle")
+            
             username = request.form['username']
+            
+            # top 20 recommeded products for the username given in the input
             top_recommended_products = pd.DataFrame(recommendation_df.loc[username].sort_values(ascending=False)[0:20])
 
             # Reading Actual Data file
             ratings = pd.read_csv('./data/sample30.csv' , encoding='latin-1')
             
+                           
             def sentiment_predict(reviews_text):
-                #print(reviews_text)
-                test_data = CountVectorizer(vocabulary=loaded_vectorizer.get_feature_names_out())
+                test_data = TfidfVectorizer(vocabulary=loaded_vectorizer.get_feature_names_out())
                 X_test_value = test_data.fit_transform(reviews_text)
+                #print(X_test_value)
                 sentiment_output = pd.DataFrame(loaded_model.predict(X_test_value), columns=['sentiment'])
                 reviews_text.reset_index(drop=True, inplace=True)
                 sentiment_output.reset_index(drop=True, inplace=True) 
                 sentiment_output = pd.concat([reviews_text, sentiment_output], axis=1)
                 return sentiment_output
-
-                       
+                    
             sentimetment_result_df = pd.DataFrame()
             for index, row in top_recommended_products.iterrows():
                 product_reviews = ratings[ratings['name'].isin([row.name])].reviews_text
@@ -60,6 +63,7 @@ def Submit():
             gb = pd.merge(gb,gb_total[['name','total_counts']],on='name', how='right')
             gb['percentage'] = (gb['counts']/gb['total_counts'])*100
             gb_final = gb[(gb['percentage'] >=50) & (gb['sentiment'] == 1)]
+            gb_final = gb_final.sort_values('percentage', ascending=False).head(5)
             show_flag = True
             print(gb_final.name)
         
